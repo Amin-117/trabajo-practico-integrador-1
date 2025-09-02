@@ -2,13 +2,12 @@ import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 import userModel from "../models/user.model.js";
 
 export const registerUser = async (req, res) => {
+  const { username, email, password, role } = req.body;
   try {
-    const { username, email, password, role } = req.body;
-
+    
     // Validar 
     const existingUser = await userModel.findOne({ where: { email } });
     if (existingUser) return res.status(400).json({ message: "El email ya existe" });
-
     // Hashear contraseña
     const hashedPassword = await hashPassword(password);
 
@@ -53,8 +52,8 @@ export const getUserById = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  const { username, email, password, role } = req.body;
   try {
-    const { username, email, password, role } = req.body;
 
     const user = await userModel.findByPk(req.params.id);
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
