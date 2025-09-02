@@ -42,7 +42,9 @@ const userModel = sequelize.define("User", {
   },
 }, {
   tableName: "users",
-  timestamps: false 
+  timestamps: false, 
+  paranoid: true,
+  deletedAt: "deleted_at"
 });
 
 //relacion 1:1 user y profile
@@ -62,7 +64,8 @@ userModel.hasMany(articleModel, {
 });
 articleModel.belongsTo(userModel, {
   foreignKey: "user_id",
-  as: "user"
+  as: "user",
+  onDelete: "CASCADE"
 });
 
 export default userModel;

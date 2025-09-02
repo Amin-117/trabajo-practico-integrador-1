@@ -48,7 +48,9 @@ const profileModel = sequelize.define("Profile", {
   }
 }, {
   tableName: "profiles",
-  timestamps: false
+  timestamps: false,
+  paranoid: true,
+  deletedAt: "deleted_at"
 });
 
 export default profileModel;
