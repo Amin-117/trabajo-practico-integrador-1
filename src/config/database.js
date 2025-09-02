@@ -9,7 +9,7 @@ const sequelize = new Sequelize(
     process.env.DB_PASSWORD,
     {
         host: process.env.DB_HOST,
-        dialect: process.env.DIALECT
+        dialect: process.env.DB_DIALECT
     },
 );
 
@@ -19,7 +19,7 @@ export const initDB = async () =>{
     try{
         await sequelize.authenticate();
         console.log("Conectado a la base de datos");
-        await sequelize.sync();
+        await sequelize.sync({ force: true });
     } catch(error) {
         console.error("error al conectarse a la base de datos")
     };

@@ -1,7 +1,9 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
+import profileModel from "./profile.model.js";
+import articleModel from "./article.model.js";
 
-const User = sequelize.define("User", {
+const userModel = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -40,7 +42,27 @@ const User = sequelize.define("User", {
   },
 }, {
   tableName: "users",
-  timestamps: false // O ajusta para usar tus propios campos de tiempo
+  timestamps: false 
 });
 
-export default User;
+//relacion 1:1 user y profile
+userModel.hasOne(profileModel, {
+  foreignKey: "user_id",
+  as: "profile"
+});
+profileModel.belongsTo(userModel, {
+  foreignKey: "user_id",
+  as: "user"
+});
+
+//relacion 1:N user y articles
+userModel.hasMany(articleModel, {
+  foreignKey: "user_id",
+  as: "articles"
+});
+articleModel.belongsTo(userModel, {
+  foreignKey: "user_id",
+  as: "user"
+});
+
+export default userModel;

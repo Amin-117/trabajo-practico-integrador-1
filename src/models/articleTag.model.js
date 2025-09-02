@@ -1,5 +1,7 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/database.js";
+import articleModel from "./article.model.js";
+import tagModel from "./tag.model.js";
 
 const articleTagModel = sequelize.define("ArticleTag", {
     id: {
@@ -36,6 +38,21 @@ const articleTagModel = sequelize.define("ArticleTag", {
 }, {
   tableName: "article_tags",
   timestamps: false
+});
+
+// Relación N:M
+articleModel.belongsToMany(tagModel, {
+  through: articleTagModel,
+  foreignKey: "article_id",
+  otherKey: "tag_id",
+  as: "tags"
+});
+
+tagModel.belongsToMany(articleModel, {
+  through: articleTagModel,
+  foreignKey: "tag_id",
+  otherKey: "article_id",
+  as: "articles"
 });
 
 export default articleTagModel;
