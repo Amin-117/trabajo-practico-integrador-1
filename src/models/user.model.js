@@ -1,6 +1,7 @@
-import { DataTypes, ENUM } from "sequelize";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
 
-const userModel = sequelize.define("User", {
+const User = sequelize.define("User", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -37,6 +38,9 @@ const userModel = sequelize.define("User", {
     type: DataTypes.DATE,
     allowNull: true
   },
+}, {
+  tableName: "users",
+  timestamps: false // O ajusta para usar tus propios campos de tiempo
 });
 
-export default userModel;
+export default User;
