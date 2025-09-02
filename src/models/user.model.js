@@ -64,8 +64,8 @@ userModel.hasMany(articleModel, {
 });
 articleModel.belongsTo(userModel, {
   foreignKey: "user_id",
-  as: "user",
-  onDelete: "CASCADE"
+  as: "author",
+  onDelete: "CASCADE",
 });
 
 export default userModel;
