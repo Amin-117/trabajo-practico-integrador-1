@@ -1,8 +1,8 @@
 import tagModel from "../models/tag.model.js"; 
 
 export const createTag = async (req, res) => {
-  try {
     const { name } = req.body;
+  try {
 
     // Validar que exista el campo
     if (!name) return res.status(400).json({ message: "El nombre de la etiqueta es obligatorio" });
@@ -37,8 +37,8 @@ export const getTagById = async (req, res) => {
 };
 
 export const updateTag = async (req, res) => {
-  try {
     const { name } = req.body;
+  try {
     const tag = await tagModel.findByPk(req.params.id);
     if (!tag) return res.status(404).json({ message: "Etiqueta no encontrada" });
 
