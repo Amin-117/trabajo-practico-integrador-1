@@ -6,13 +6,60 @@ import {
   updateTag,
   deleteTag
 } from "../controllers/tag.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { validator } from "../middlewares/validator.js";
+import { dataValidada } from "../middlewares/matchedData.middleware.js";
+import {
+  createTagValidation,
+  updateTagValidation,
+  getTagValidation,
+  deleteTagValidation
+} from "../middlewares/validations/tag.validator.js";
 
-const router = Router();
+const tagRoutes = Router();
 
-router.post("/", createTag);
-router.get("/", getTags);
-router.get("/:id", getTagById);
-router.put("/:id", updateTag);
-router.delete("/:id", deleteTag);
+// Crear etiqueta (solo admin)
+tagRoutes.post(
+  "/",
+  authMiddleware,
+  adminMiddleware,
+  createTagValidation,
+  validator,
+  dataValidada,
+  createTag
+);
 
-export default router;
+// Listar todas las etiquetas (público)
+tagRoutes.get("/",authMiddleware, getTags);
+
+// Obtener etiqueta por ID (público)
+tagRoutes.get(
+  "/:id",
+  getTagValidation,
+  validator,
+  getTagById
+);
+
+// Actualizar etiqueta (solo admin)
+tagRoutes.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  updateTagValidation,
+  validator,
+  dataValidada,
+  updateTag
+);
+
+// Eliminar etiqueta (solo admin)
+tagRoutes.delete(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  deleteTagValidation,
+  validator,
+  deleteTag
+);
+
+export default tagRoutes;

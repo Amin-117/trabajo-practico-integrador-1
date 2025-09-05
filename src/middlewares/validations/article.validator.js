@@ -1,6 +1,7 @@
 import { body, param } from "express-validator";
 import articleModel from "../../models/article.model.js";
 import userModel from "../../models/user.model.js";
+//escape() para evitar inyecciones de código
 
 // Crear artículo
 export const createArticleValidation = [

@@ -32,21 +32,15 @@ articleRoutes.post(
 );
 
 // Listar todos los artículos publicados (público)
-articleRoutes.get("/", getArticles);
+articleRoutes.get("/", authMiddleware, getArticles);
 
 // Obtener artículo por ID (público)
 articleRoutes.get(
   "/:id",
+  authMiddleware,
   getArticleValidation,
   validator,
   getArticleById
-);
-
-// Listar artículos del usuario autenticado
-articleRoutes.get(
-  "/user/articles",
-  authMiddleware,
-  getUserArticles
 );
 
 // Actualizar artículo (solo autor o admin)

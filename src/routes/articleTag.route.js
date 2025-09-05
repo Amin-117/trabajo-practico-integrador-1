@@ -11,13 +11,14 @@ import {
   createArticleTagValidation,
   deleteArticleTagValidation
 } from "../middlewares/validations/articletag.validator.js";
+import { ownerMiddleware } from "../middlewares/owner.middleware.js";
 
 const articleTagRoutes = Router();
 
-// Asociar un tag a un artículo (solo admin)
+// Asociar un tag a un artículo 
 articleTagRoutes.post(
   "/",
-  authMiddleware,
+  ownerMiddleware,
   adminMiddleware,
   createArticleTagValidation,
   validator,
@@ -25,10 +26,10 @@ articleTagRoutes.post(
   addTagToArticle
 );
 
-// Remover un tag de un artículo (solo admin)
+// Remover un tag de un artículo 
 articleTagRoutes.delete(
   "/:id",
-  authMiddleware,
+  ownerMiddleware,
   adminMiddleware,
   deleteArticleTagValidation,
   validator,
