@@ -7,7 +7,6 @@ import tagModel from "./src/models/tag.model.js";
 import articleTagModel from "./src/models/articleTag.model.js";
 import { initDB } from "./src/config/database.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -23,4 +22,4 @@ initDB()
   })
   .catch((err) => {
     console.error("No se pudo iniciar la base de datos:", err);
-  });
+  })

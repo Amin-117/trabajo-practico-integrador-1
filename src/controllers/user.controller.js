@@ -1,30 +1,6 @@
 import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 import userModel from "../models/user.model.js";
 
-export const registerUser = async (req, res) => {
-  const { username, email, password, role } = req.body;
-  try {
-    
-    // Validar 
-    const existingUser = await userModel.findOne({ where: { email } });
-    if (existingUser) return res.status(400).json({ message: "El email ya existe" });
-    // Hashear contraseña
-    const hashedPassword = await hashPassword(password);
-
-    // Crear usuario
-    const newUser = await userModel.create({
-      username,
-      email,
-      password: hashedPassword,
-      role: role || "user"
-    });
-
-    res.status(201).json({ message: "Usuario registrado", user: newUser });
-  } catch (error) {
-    res.status(500).json({ message: "Error al registrar usuario", error: error.message });
-  }
-};
-
 export const getUsers = async (req, res) => {
   try {
     const users = await userModel.findAll({
