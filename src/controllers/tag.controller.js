@@ -1,11 +1,12 @@
 import tagModel from "../models/tag.model.js"; 
 
 export const createTag = async (req, res) => {
-    const { name } = req.body;
+  const { name } = req.data; 
   try {
-
     // Validar que exista el campo
-    if (!name) return res.status(400).json({ message: "El nombre de la etiqueta es obligatorio" });
+    if (!name) {
+      return res.status(400).json({ message: "El nombre de la etiqueta es obligatorio" });
+    }
 
     // Crear tag
     const newTag = await tagModel.create({ name });
@@ -37,7 +38,7 @@ export const getTagById = async (req, res) => {
 };
 
 export const updateTag = async (req, res) => {
-    const { name } = req.body;
+  const { name } = req.data; 
   try {
     const tag = await tagModel.findByPk(req.params.id);
     if (!tag) return res.status(404).json({ message: "Etiqueta no encontrada" });
@@ -45,7 +46,9 @@ export const updateTag = async (req, res) => {
     // Validar unicidad si se quiere cambiar el nombre
     if (name && name !== tag.name) {
       const existingTag = await tagModel.findOne({ where: { name } });
-      if (existingTag) return res.status(400).json({ message: "El nombre de la etiqueta ya existe" });
+      if (existingTag) {
+        return res.status(400).json({ message: "El nombre de la etiqueta ya existe" });
+      }
     }
 
     await tag.update({ name, updated_at: new Date() });

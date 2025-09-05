@@ -3,17 +3,18 @@ import userModel from "../models/user.model.js";
 import tagModel from "../models/tag.model.js";
 
 export const createArticle = async (req, res) => {
-    const { title, content, excerpt, status } = req.body;
+  const { title, content, excerpt, status } = req.data; // 🔥 ahora viene validado
   try {
-
-    if (!title || !content) return res.status(400).json({ message: "Título y contenido son obligatorios" });
+    if (!title || !content) {
+      return res.status(400).json({ message: "Título y contenido son obligatorios" });
+    }
 
     const newArticle = await articleModel.create({
       title,
       content,
       excerpt: excerpt || null,
       status: status || "published",
-      user_id: req.user.id // extraído del authMiddleware
+      user_id: req.user.id, // extraído del authMiddleware
     });
 
     res.status(201).json({ message: "Artículo creado", article: newArticle });
@@ -26,7 +27,7 @@ export const getArticles = async (req, res) => {
   try {
     const articles = await articleModel.findAll({
       where: { status: "published" },
-      include: [{ model: userModel, as: "author", attributes: ["id", "username", "email"] }]
+      include: [{ model: userModel, as: "author", attributes: ["id", "username", "email"] }],
     });
 
     res.json(articles);
@@ -40,8 +41,8 @@ export const getArticleById = async (req, res) => {
     const article = await articleModel.findByPk(req.params.id, {
       include: [
         { model: userModel, as: "author", attributes: ["id", "username", "email"] },
-        { model: tagModel, as: "tags", through: { attributes: [] } }
-      ]
+        { model: tagModel, as: "tags", through: { attributes: [] } },
+      ],
     });
 
     if (!article) return res.status(404).json({ message: "Artículo no encontrado" });
@@ -56,7 +57,7 @@ export const getUserArticles = async (req, res) => {
   try {
     const articles = await articleModel.findAll({
       where: { user_id: req.user.id },
-      include: [{ model: tagModel, as: "tags", through: { attributes: [] } }]
+      include: [{ model: tagModel, as: "tags", through: { attributes: [] } }],
     });
 
     res.json(articles);
@@ -66,9 +67,8 @@ export const getUserArticles = async (req, res) => {
 };
 
 export const updateArticle = async (req, res) => {
-    const { title, content, excerpt, status } = req.body;
+  const { title, content, excerpt, status } = req.data; // 🔥 usamos data validada
   try {
-
     const article = await articleModel.findByPk(req.params.id);
     if (!article) return res.status(404).json({ message: "Artículo no encontrado" });
 
@@ -82,7 +82,7 @@ export const updateArticle = async (req, res) => {
       content: content || article.content,
       excerpt: excerpt || article.excerpt,
       status: status || article.status,
-      updated_at: new Date()
+      updated_at: new Date(),
     });
 
     res.json({ message: "Artículo actualizado", article });
@@ -101,7 +101,7 @@ export const deleteArticle = async (req, res) => {
       return res.status(403).json({ message: "No autorizado a eliminar este artículo" });
     }
 
-    await article.destroy(); 
+    await article.destroy();
     res.json({ message: "Artículo eliminado" });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar artículo", error: error.message });

@@ -3,9 +3,8 @@ import articleModel from "../models/article.model.js";
 import tagModel from "../models/tag.model.js";
 
 export const addTagToArticle = async (req, res) => {
-    const { article_id, tag_id } = req.body;
+  const { article_id, tag_id } = req.data;
   try {
-
     // Validar existencia de artículo y tag
     const article = await articleModel.findByPk(article_id);
     if (!article) return res.status(404).json({ message: "Artículo no encontrado" });
@@ -20,7 +19,7 @@ export const addTagToArticle = async (req, res) => {
 
     // Crear asociación (si no existe ya)
     const [association, created] = await articleTagModel.findOrCreate({
-      where: { article_id, tag_id }
+      where: { article_id, tag_id },
     });
 
     if (!created) return res.status(400).json({ message: "El tag ya está asociado al artículo" });
@@ -32,9 +31,8 @@ export const addTagToArticle = async (req, res) => {
 };
 
 export const removeTagFromArticle = async (req, res) => {
-    const { articleTagId } = req.params;
+  const { articleTagId } = req.params;
   try {
-
     const association = await articleTagModel.findByPk(articleTagId);
     if (!association) return res.status(404).json({ message: "Asociación no encontrada" });
 

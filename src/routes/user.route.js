@@ -1,18 +1,70 @@
 import { Router } from "express";
 import {
-  registerUser,
-  getUsers,
-  getUserById,
+  register,
+  getAllUser,
+  getByPkUser,
   updateUser,
   deleteUser
 } from "../controllers/user.controller.js";
+import { dataValidada } from "../middlewares/matchedData.middleware.js";
+import { validator } from "../middlewares/validator.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import {
+  createUserValidation,
+  updateUserValidation,
+  getUserByIdValidation,
+  deleteUserValidation
+} from "../middlewares/validations/user.validator.js";
 
-const router = Router();
+const userRoutes = Router();
 
-router.post("/", registerUser);
-router.get("/", getUsers);
-router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+// Registrar usuario (registro público)
+userRoutes.post(
+  "/",
+  createUserValidation,
+  validator,
+  dataValidada,
+  register
+);
 
-export default router;
+// Listar todos los usuarios (solo admin)
+userRoutes.get(
+  "/",
+  authMiddleware,
+  adminMiddleware,
+  getAllUser
+);
+
+// Obtener usuario por ID (solo admin)
+userRoutes.get(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  getUserByIdValidation,
+  validator,
+  getByPkUser
+);
+
+// Actualizar usuario (solo admin)
+userRoutes.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  updateUserValidation,
+  validator,
+  dataValidada,
+  updateUser
+);
+
+// Eliminar usuario (solo admin)
+userRoutes.delete(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  deleteUserValidation,
+  validator,
+  deleteUser
+);
+
+export default userRoutes;
