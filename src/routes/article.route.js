@@ -7,14 +7,67 @@ import {
   updateArticle,
   deleteArticle
 } from "../controllers/article.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { ownerMiddleware } from "../middlewares/owner.middleware.js";
+import { validator } from "../middlewares/validator.js";
+import { dataValidada } from "../middlewares/matchedData.middleware.js";
+import {
+  createArticleValidation,
+  updateArticleValidation,
+  getArticleValidation,
+  deleteArticleValidation
+} from "../middlewares/validations/article.validator.js";
 
-const router = Router();
+const articleRoutes = Router();
 
-router.post("/", createArticle);
-router.get("/", getArticles);
-router.get("/:id", getArticleById);
-router.get("/user/articles", getUserArticles);
-router.put("/:id", updateArticle);
-router.delete("/:id", deleteArticle);
+// Crear artículo (usuario autenticado)
+articleRoutes.post(
+  "/",
+  authMiddleware,
+  createArticleValidation,
+  validator,
+  dataValidada,
+  createArticle
+);
 
-export default router;
+// Listar todos los artículos publicados (público)
+articleRoutes.get("/", getArticles);
+
+// Obtener artículo por ID (público)
+articleRoutes.get(
+  "/:id",
+  getArticleValidation,
+  validator,
+  getArticleById
+);
+
+// Listar artículos del usuario autenticado
+articleRoutes.get(
+  "/user/articles",
+  authMiddleware,
+  getUserArticles
+);
+
+// Actualizar artículo (solo autor o admin)
+articleRoutes.put(
+  "/:id",
+  authMiddleware,
+  ownerMiddleware,
+  updateArticleValidation,
+  validator,
+  dataValidada,
+  updateArticle
+);
+
+// Eliminar artículo (solo autor o admin)
+articleRoutes.delete(
+  "/:id",
+  authMiddleware,
+  ownerMiddleware,
+  deleteArticleValidation,
+  validator,
+  deleteArticle
+);
+
+export default articleRoutes;
