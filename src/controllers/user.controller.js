@@ -1,72 +1,62 @@
 import { hashPassword, comparePassword } from "../helpers/bcrypt.helper.js";
 import userModel from "../models/user.model.js";
+import articleModel from "../models/article.model.js";
+import profileModel from "../models/profile.model.js";
 
-export const getUsers = async (req, res) => {
+export const getAllUser = async (req, res) => {
   try {
     const users = await userModel.findAll({
-      attributes: { exclude: ["password"] }
+      attributes: { exclude: ["password"] },
+      include: { model: ProfileModel, as: "profile" },
     });
-    res.json(users);
+    if (users.length === 0)
+      return res.status(404).json({ message: "No existen usuarios" });
+    return res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener usuarios" });
+    return res.status(500).json({ error: error.message });
   }
 };
 
-
-export const getUserById = async (req, res) => {
+export const getByPkUser = async (req, res) => {
+  const { id } = req.params;
   try {
-    const user = await userModel.findByPk(req.params.id, {
-      attributes: { exclude: ["password"] }
+    const user = await UserModel.findByPk(id, {
+      attributes: { exclude: ["password"] },
+      include: [
+        { model: ProfileModel, as: "profile" },
+        { model: ArticleModel, as: "articles" },
+      ],
     });
-
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
-
-    res.json(user);
+    if (!user) return res.status(404).json({ message: "El usuario no existe" });
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error al obtener usuario" });
+    return res.status(500).json({ error: error.message });
   }
 };
 
 export const updateUser = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { id } = req.params;
   try {
+    const data = req.data;
 
-    const user = await userModel.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
+    const user = await UserModel.findByPk(id);
+    if (!user) return res.status(404).json({ message: "El usuario no existe" });
 
-    // Si viene nueva contraseña, hashearla
-    let hashedPassword;
-    if (password) {
-      hashedPassword = await hashPassword(password);
-    }
+    await user.update(data);
 
-    // Actualizar campos
-    await user.update({
-      username: username || user.username,
-      email: email || user.email,
-      password: hashedPassword || user.password,
-      role: role || user.role,
-      updated_at: new Date()
-    });
-
-    const updatedUser = await userModel.findByPk(req.params.id, {
-      attributes: { exclude: ["password"] }
-    });
-
-    res.json({ message: "Usuario actualizado", user: updatedUser });
+    return res.status(200).json({ message: "usuario actualizado", user });
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar usuario", error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
-
 export const deleteUser = async (req, res) => {
+  const { id } = req.params;
   try {
-    const user = await userModel.findByPk(req.params.id);
-    if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
-
-    await user.destroy(); 
-    res.json({ message: "Usuario eliminado (lógicamente)" });
+    const deleted = await UserModel.destroy({ where: { id } });
+    if (!deleted)
+      return res.status(200).json({ message: "El usuario no existe" });
+    return res.status(200).json({ message: "Usuario eliminado" });
   } catch (error) {
-    res.status(500).json({ message: "Error al eliminar usuario", error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
