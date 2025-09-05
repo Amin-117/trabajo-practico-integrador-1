@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  register,
   getAllUser,
   getByPkUser,
   updateUser,
@@ -25,7 +24,6 @@ userRoutes.post(
   createUserValidation,
   validator,
   dataValidada,
-  register
 );
 
 // Listar todos los usuarios (solo admin)

@@ -5,6 +5,7 @@ import { comparePassword, hashPassword } from "../helpers/bcrypt.helper.js";
 
 export const register = async (req, res) => {
   try {
+     console.log("req.data:", req.data);
     const data = req.data;
 
     const hashedPassword = await hashPassword(data.password);
@@ -29,8 +30,10 @@ export const register = async (req, res) => {
       msg: "usuario creado correctamente",
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       msg: "Error interno del servidor",
+      error: error.message,
     });
   }
 };

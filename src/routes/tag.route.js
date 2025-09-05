@@ -31,11 +31,12 @@ tagRoutes.post(
 );
 
 // Listar todas las etiquetas (público)
-tagRoutes.get("/",authMiddleware, getTags);
+tagRoutes.get("/", authMiddleware, getTags);
 
 // Obtener etiqueta por ID (público)
 tagRoutes.get(
   "/:id",
+  authMiddleware,
   getTagValidation,
   validator,
   getTagById

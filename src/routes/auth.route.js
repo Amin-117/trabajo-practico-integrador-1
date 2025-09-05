@@ -17,9 +17,9 @@ const authRoutes = Router();
 authRoutes.post(
   "/register",
   createRegisterValidation,
-  validator,
   dataValidada,
-  register
+  validator,
+  register,
 );
 
 // Login de usuario
