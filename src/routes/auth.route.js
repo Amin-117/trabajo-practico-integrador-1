@@ -4,9 +4,12 @@ import {
   login,
   logout,
   getProfile,
-  updateProfile
+  updateProfile,
 } from "../controllers/auth.controller.js";
-import { createRegisterValidation, updateProfileValidation } from "../middlewares/validations/auth.validator.js";
+import {
+  createRegisterValidation,
+  updateProfileValidation,
+} from "../middlewares/validations/auth.validator.js";
 import { validator } from "../middlewares/validator.js";
 import { dataValidada } from "../middlewares/matchedData.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
@@ -19,7 +22,7 @@ authRoutes.post(
   createRegisterValidation,
   dataValidada,
   validator,
-  register,
+  register
 );
 
 // Login de usuario
@@ -36,8 +39,8 @@ authRoutes.put(
   "/profile",
   authMiddleware,
   updateProfileValidation,
-  validator,
   dataValidada,
+  validator,
   updateProfile
 );
 

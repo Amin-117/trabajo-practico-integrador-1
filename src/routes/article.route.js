@@ -5,7 +5,7 @@ import {
   getArticleById,
   getUserArticles,
   updateArticle,
-  deleteArticle
+  deleteArticle,
 } from "../controllers/article.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
@@ -16,7 +16,7 @@ import {
   createArticleValidation,
   updateArticleValidation,
   getArticleValidation,
-  deleteArticleValidation
+  deleteArticleValidation,
 } from "../middlewares/validations/article.validator.js";
 
 const articleRoutes = Router();
@@ -26,8 +26,8 @@ articleRoutes.post(
   "/",
   authMiddleware,
   createArticleValidation,
-  validator,
   dataValidada,
+  validator,
   createArticle
 );
 
