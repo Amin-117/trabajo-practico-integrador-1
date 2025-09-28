@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   addTagToArticle,
-  removeTagFromArticle
+  removeTagFromArticle,
 } from "../controllers/articleTag.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
@@ -9,24 +9,24 @@ import { validator } from "../middlewares/validator.js";
 import { dataValidada } from "../middlewares/matchedData.middleware.js";
 import {
   createArticleTagValidation,
-  deleteArticleTagValidation
+  deleteArticleTagValidation,
 } from "../middlewares/validations/articletag.validator.js";
 import { ownerMiddleware } from "../middlewares/owner.middleware.js";
 
 const articleTagRoutes = Router();
 
-// Asociar un tag a un artículo 
+// Asociar un tag a un artículo
 articleTagRoutes.post(
   "/",
   ownerMiddleware,
   adminMiddleware,
   createArticleTagValidation,
-  validator,
   dataValidada,
+  validator,
   addTagToArticle
 );
 
-// Remover un tag de un artículo 
+// Remover un tag de un artículo
 articleTagRoutes.delete(
   "/:id",
   ownerMiddleware,

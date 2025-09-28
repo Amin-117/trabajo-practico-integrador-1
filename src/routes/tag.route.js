@@ -4,7 +4,7 @@ import {
   getTags,
   getTagById,
   updateTag,
-  deleteTag
+  deleteTag,
 } from "../controllers/tag.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
@@ -14,7 +14,7 @@ import {
   createTagValidation,
   updateTagValidation,
   getTagValidation,
-  deleteTagValidation
+  deleteTagValidation,
 } from "../middlewares/validations/tag.validator.js";
 
 const tagRoutes = Router();
@@ -25,8 +25,8 @@ tagRoutes.post(
   authMiddleware,
   adminMiddleware,
   createTagValidation,
-  validator,
   dataValidada,
+  validator,
   createTag
 );
 
@@ -34,13 +34,7 @@ tagRoutes.post(
 tagRoutes.get("/", authMiddleware, getTags);
 
 // Obtener etiqueta por ID (público)
-tagRoutes.get(
-  "/:id",
-  authMiddleware,
-  getTagValidation,
-  validator,
-  getTagById
-);
+tagRoutes.get("/:id", authMiddleware, getTagValidation, validator, getTagById);
 
 // Actualizar etiqueta (solo admin)
 tagRoutes.put(
@@ -48,8 +42,8 @@ tagRoutes.put(
   authMiddleware,
   adminMiddleware,
   updateTagValidation,
-  validator,
   dataValidada,
+  validator,
   updateTag
 );
 

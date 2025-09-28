@@ -48,6 +48,7 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 };
+
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
   try {

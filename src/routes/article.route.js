@@ -26,8 +26,8 @@ articleRoutes.post(
   "/",
   authMiddleware,
   createArticleValidation,
-  dataValidada,
   validator,
+  dataValidada,
   createArticle
 );
 
@@ -49,8 +49,8 @@ articleRoutes.put(
   authMiddleware,
   ownerMiddleware,
   updateArticleValidation,
-  validator,
   dataValidada,
+  validator,
   updateArticle
 );
 

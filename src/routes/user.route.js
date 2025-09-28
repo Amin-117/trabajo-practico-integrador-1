@@ -3,7 +3,7 @@ import {
   getAllUser,
   getByPkUser,
   updateUser,
-  deleteUser
+  deleteUser,
 } from "../controllers/user.controller.js";
 import { dataValidada } from "../middlewares/matchedData.middleware.js";
 import { validator } from "../middlewares/validator.js";
@@ -13,26 +13,13 @@ import {
   createUserValidation,
   updateUserValidation,
   getUserByIdValidation,
-  deleteUserValidation
+  deleteUserValidation,
 } from "../middlewares/validations/user.validator.js";
 
 const userRoutes = Router();
 
-// Registrar usuario (registro público)
-userRoutes.post(
-  "/",
-  createUserValidation,
-  validator,
-  dataValidada,
-);
-
 // Listar todos los usuarios (solo admin)
-userRoutes.get(
-  "/",
-  authMiddleware,
-  adminMiddleware,
-  getAllUser
-);
+userRoutes.get("/", authMiddleware, adminMiddleware, getAllUser);
 
 // Obtener usuario por ID (solo admin)
 userRoutes.get(
@@ -50,8 +37,8 @@ userRoutes.put(
   authMiddleware,
   adminMiddleware,
   updateUserValidation,
-  validator,
   dataValidada,
+  validator,
   updateUser
 );
 
